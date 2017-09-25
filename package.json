@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "elasticlunr": "^0.9.5",
+    "express": "^4.15.5",
+    "hbs": "^4.0.1",
     "quickstart": "^1.2.2",
     "request": "^2.82.0"
   }
