@@ -1,5 +1,5 @@
 const fs = require('fs')
-  const elasticlunr = require('elasticlunr')
+const elasticlunr = require('elasticlunr')
 
 class indexor {
 
