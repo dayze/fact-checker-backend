@@ -3,15 +3,12 @@ const elasticlunr = require('elasticlunr')
 
 class indexor {
 
-  constructor(filePath, fields) {
-    this.data = this.parseData(filePath)
+  constructor(filePath, fields, generateDocument) {
     this.index = this.createIndex(fields)
-    this.generateDocument()
-  }
-
-  parseData(filePath) {
-    /* mode sync */
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'))
+    if (generateDocument) {
+      this.data = this.parseData(filePath)
+      this.generateDocument()
+    }
   }
 
   createIndex(fields) {
@@ -23,15 +20,10 @@ class indexor {
     })
   }
 
-  generateDocument() {
-    for (let i = 0; i < this.data.length; i++) {
-      this.data[i].id = i
-      this.index.addDoc(this.data[i])
-    }
-  }
-
   query(str) {
     let res = []
+    let indexDump = JSON.parse(fs.readFileSync('data/indexor.json', 'utf8'))
+    this.index = elasticlunr.Index.load(indexDump)
     for (let index of this.index.search(str)) {
       let temp = this.index.documentStore.docs[index.ref]
       temp.score = index.score
@@ -42,16 +34,33 @@ class indexor {
   }
 
   getTruthiness(fact) {
-    if(fact.authenticity === 'False' || fact.authenticity === 'Mostly False' || fact.authenticity === 'Pants on Fire!') {
+    if (fact.authenticity === 'False' || fact.authenticity === 'Mostly False' || fact.authenticity === 'Pants on Fire!') {
       return 'false'
     }
-    else if (fact.authenticity === 'true' || fact.authenticity === 'Mostly True' || fact.authenticity === 'True'){
+    else if (fact.authenticity === 'true' || fact.authenticity === 'Mostly True' || fact.authenticity === 'True') {
       return 'true'
     }
     else {
       return 'halfTrue'
     }
   }
+
+  /* PARSE & GENERATE DOCUMENT
+ ========================================================================== */
+  parseData(filePath) {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'))
+  }
+
+  generateDocument() {
+    for (let i = 0; i < this.data.length; i++) {
+      this.data[i].id = i
+      this.index.addDoc(this.data[i])
+    }
+    fs.writeFile('data/indexor.json', JSON.stringify(this.index), function (err) {
+      if (err) throw err;
+    });
+  }
 }
+
 
 module.exports = indexor
