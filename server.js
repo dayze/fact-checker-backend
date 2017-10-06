@@ -15,7 +15,7 @@ app.use(function(req, res, next) {
 });
 
 app.get('/search/:q', (request, response) => {
-  let indexor = new Indexor('data/fact.json', ["content", "author", "date", "authenticity", "title"])
+  let indexor = new Indexor('data/fact.json', ["content", "author", "date", "authenticity", "title"], false)
   response.send(indexor.query(request.params.q))
 })
 

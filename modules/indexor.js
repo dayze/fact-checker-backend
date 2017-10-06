@@ -28,6 +28,7 @@ class indexor {
       let temp = this.index.documentStore.docs[index.ref]
       temp.score = index.score
       temp.truthiness = this.getTruthiness(temp)
+      temp.isVisible = true
       res.push(temp)
     }
     return res
