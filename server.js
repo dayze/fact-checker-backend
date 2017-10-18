@@ -2,8 +2,6 @@ let express = require('express') // "framework" node js to easily implement web 
 
 const Indexor = require('./modules/indexor')
 
-//let hbs = require('hbs') // templating, twig like
-
 let app = express() // initialize of express, option may be passed, basic for now
 //hbs.registerPartials(__dirname + '/views/partials') // indicate where are stored the part of hbs template
 //app.set('view engine', 'hbs') // tell express that we use hbs for templating

@@ -5,11 +5,13 @@ class indexor {
 
   constructor(filePath, fields, generateDocument) {
     this.index = this.createIndex(fields)
+
     if (generateDocument) {
       this.data = this.parseData(filePath)
       this.generateDocument()
     }
   }
+
 
   createIndex(fields) {
     return elasticlunr(function () {
@@ -24,7 +26,13 @@ class indexor {
     let res = []
     let indexDump = JSON.parse(fs.readFileSync('data/indexor.json', 'utf8'))
     this.index = elasticlunr.Index.load(indexDump)
-    for (let index of this.index.search(str)) {
+    for (let index of this.index.search(str, {
+      fields: {
+        title: {boost: 1},
+        content: {boost: 2},
+        author: {boost: 1}
+      }
+    })) {
       let temp = this.index.documentStore.docs[index.ref]
       temp.score = index.score
       temp.truthiness = this.getTruthiness(temp)
