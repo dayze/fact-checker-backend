@@ -28,8 +28,8 @@ class indexor {
     this.index = elasticlunr.Index.load(indexDump)
     for (let index of this.index.search(str, {
       fields: {
-        title: {boost: 1},
-        content: {boost: 2},
+        title: {boost: 2},
+        content: {boost: 1},
         author: {boost: 1}
       }
     })) {
